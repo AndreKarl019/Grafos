@@ -1,44 +1,76 @@
 #include <stdio.h>
+#include <string.h>
 #include "grafo_lista.h"
 #include "busca_grafo.h"
-#include <string.h>
+#include "ordenacao_topologica.h"
+#include "coloracao_grafo.h"
 
-int main(){
+int main()
+{
     GrafoLista *grafo = criar_grafo(5);
+
     adicionar_aresta(grafo, 0, 1);
     adicionar_aresta(grafo, 0, 2);
     adicionar_aresta(grafo, 1, 3);
     adicionar_aresta(grafo, 2, 3);
     adicionar_aresta(grafo, 3, 4);
 
-    for(int i = 0; i<grafo->num_vertices; i++){
-        printf("%i: ->  ", i+1);
-        No *no = grafo->lista[i];
-        while(no!=NULL){
-            printf("%i -> ", no->vertice+1);
-            no = no->proximo;
-        }
-        printf("NULL\n");
-    }
+    printf("Grafo nao orientado\n");
+    imprimir_grafo(grafo);
 
-
-    int visitado[10];
-
+    int visitado[MAX_VERTICES];
     memset(visitado, 0, sizeof(visitado));
+    printf("Inicia dfs pelo vertice 1\n");
     dfs(grafo, 0, visitado);
     printf("\n");
+
     memset(visitado, 0, sizeof(visitado));
-    dfs(grafo, 1, visitado);
+    printf("Inicia bfs pelo vertice 1\n");
+    bfs(grafo, 0, visitado);
     printf("\n");
+
+    GrafoLista *digrafo = criar_grafo(4);
+
+    adicionar_arco(digrafo, 0, 1);
+    adicionar_arco(digrafo, 0, 2);
+    adicionar_arco(digrafo, 1, 3);
+    adicionar_arco(digrafo, 2, 3);
+
+    printf("Grafo orientado (Digrafo)\n");
+    imprimir_grafo(digrafo);
+
+    int ordem[MAX_VERTICES];
     memset(visitado, 0, sizeof(visitado));
-    dfs(grafo, 2, visitado);
+    printf("Ordena com dfs\n"); 
+    ordenar_dfs(digrafo, visitado, ordem);
+
+    printf("Ordem topologica de digrafo\n"); // aplicação de DFS
+    for(int i = 0; i<digrafo->num_vertices; i++){
+        printf("%i ", ordem[i]);
+    }
     printf("\n");
+
+    //Componente conexo
     memset(visitado, 0, sizeof(visitado));
-    dfs(grafo, 3, visitado);
+    int num_componentes = 0;
+    for (int i = 0; i< digrafo->num_vertices; i++){
+        num_componentes++;
+        dfs(digrafo, i, visitado);
+    }
+
+    printf("Total de components conexos = %i \n", num_componentes);
+
+    printf("Coloracao de grafos\n");
+    int cor[MAX_VERTICES];
+    memset(cor, -1, sizeof(cor));
+    int cor_usada[MAX_VERTICES];
+    coloracao_gulosa(grafo, cor, cor_usada);
+    printf("Cores \n");
+    for(int i = 0; i<grafo->num_vertices; i++){
+        printf("%i ", cor[i]);
+    }
     printf("\n");
-    memset(visitado, 0, sizeof(visitado));
-    dfs(grafo, 4, visitado);
-    printf("\n");   
+    
 
     return 0;
 }
