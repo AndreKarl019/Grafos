@@ -27,7 +27,6 @@ int bellman_ford(GrafoListaPonderado *g, int origem, int *dist, int *pred) {
         }
     }
 
-    int vertice_ciclo = -1;
     for (int u = 0; u < V; u++) {
         No *atual = g->lista[u];
         while (atual != NULL) {
@@ -36,7 +35,6 @@ int bellman_ford(GrafoListaPonderado *g, int origem, int *dist, int *pred) {
 
             if (dist[u] + peso < dist[v]) {
                 pred[v] = u;
-                vertice_ciclo = v;
                 return 0;
             }
             atual = atual->proximo;
