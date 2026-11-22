@@ -6,7 +6,7 @@ int bellman_ford(GrafoListaPonderado *g, int origem, int *dist, int *pred) {
     int V = g->tamanho;
 
     for (int i = 0; i < V; i++) {
-        dist[i] = INT_MAX / 2; 
+        dist[i] = 999999;
         pred[i] = -1;
     }
     dist[origem] = 0;
@@ -37,13 +37,13 @@ int bellman_ford(GrafoListaPonderado *g, int origem, int *dist, int *pred) {
             if (dist[u] + peso < dist[v]) {
                 pred[v] = u;
                 vertice_ciclo = v;
-                return 0; 
+                return 0;
             }
             atual = atual->proximo;
         }
     }
 
-    return 1; 
+    return 1;
 }
 
 void reconstruir_ciclo_negativo(int *pred, int vertice_inicio, int tamanho) {
